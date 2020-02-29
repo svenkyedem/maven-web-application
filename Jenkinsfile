@@ -31,7 +31,7 @@ options {
 		timestamps()
 }
 stages {	
-	tage('Read Properties'){
+	stage('Read Properties'){
 	steps{
 		script{
 					
