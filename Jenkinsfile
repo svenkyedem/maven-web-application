@@ -31,19 +31,7 @@ options {
 		timestamps()
 }
 stages {	
-	stage('Read Properties'){
-	steps{
-		script{
-					
-		//User = ${BUILD_USER}			
-					
-		jdkVersion = selectTool("${SELECT_TECH}")		
-			
-			
-		
-		}		
-	}
-   }
+	
 stage('SCM') { 	
 	steps { 				
 		echo "Pulling changes from branch ${params.GIT_BRANCHES} and from repo ${params.GITREPO}"		
@@ -64,10 +52,11 @@ stage('Maven BUILD') {
 		    echo "In clean install, build tool selected is : ${buildTool}" 	           	    
 	           }	
 		}	
-	tools {		
-		jdk "${jdkVersion}"
-  	}
-	steps { 	
+	
+	steps { 
+		  script{
+                 MavenHome = tool 'maven 3.6.3'
+                }
 		echo "Starting Build"
 		sh 'mvn clean install'
 		echo 'Clean Install Completed'        					
