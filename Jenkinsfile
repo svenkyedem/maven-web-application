@@ -51,16 +51,15 @@ stage('Maven BUILD') {
 		    return params.BUILD_TOOL_SELECTION == 'Maven'
 		    echo "In clean install, build tool selected is : ${buildTool}" 	           	    
 	           }	
-		}	
-	
-	steps { 
-		  script{
-                 MavenHome = tool 'maven 3.6.3'
-                }
-		echo "Starting Build"
-		sh 'mvn clean install'
-		echo 'Clean Install Completed'        					
 		}
+	
+	
+	  steps{
+        script{
+        MavenHome = tool 'maven 3.6.3'
+        }
+         sh "${MavenHome}/bin/mvn clean package"
+         }
 	}
 stage('Gradle BUILD') { 	
 	tools {
