@@ -36,35 +36,11 @@ stages {
 		script{
 					
 		//User = ${BUILD_USER}			
-		echo " Environment Selected is ${Environment_Name}"
-		echo " PRODUCT NAME Selected is ${PRODUCT_NAME}"
-		echo " Tool Selected is ${SELECT_TECH}"
-		echo " Build Tool Selected: ${BUILD_TOOL_SELECTION}"
-		toolSelection = "${SELECT_TECH}"
-		echo "++++ ${toolSelection}"
-		buildTool = "${BUILD_TOOL_SELECTION}"			
+					
 		jdkVersion = selectTool("${SELECT_TECH}")		
-		echo "Jdk selected is: ${jdkVersion}"
-		DOCKER_HUB_ACCOUNT = dockerHubSelector("${Environment_Name}")
-		echo "Sonar Analysis Selected : ${params.Sonar_Analysis}"
-		envAppend = appendHelmName("${Environment_Name}")		
-		buildProps = readProperties file: 'build.properties'
-		// Prinintg all build properties
-		echo "Property file is : ${buildProps}"
-		// getting all build properties into variables
-		PROJECT_KEY = "${buildProps.project_key}"
-		PROJECT_NAME = "${buildProps.project_name}"
-		HELM_NAME = "${buildProps.helm_name}"
-		YAMLFILE_NAME = "${buildProps.yamlfile_name}"
-		FOLDER_NAME = "${buildProps.folder_name}"
-		REPOSITORY_DOCKER = "${buildProps.repository_docker}"
-		registry = "${DOCKER_HUB_ACCOUNT}/${REPOSITORY_DOCKER}"		
-		newImage = "${DOCKER_HUB_ACCOUNT}/${REPOSITORY_DOCKER}:${envAppend}-${currentBuild.number}"		
 			
-			echo "Image Tag = ${newImage}"
-			echo "Project_Key = ${PROJECT_KEY}"
-			echo "Project_name = ${PROJECT_NAME}"
-			echo "REPOSITORY_DOCKER = ${REPOSITORY_DOCKER}"
+			
+		
 		}		
 	}
    }
