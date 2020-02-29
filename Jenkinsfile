@@ -61,7 +61,13 @@ stage('Maven BUILD') {
          sh "${MavenHome}/bin/mvn clean package"
          }
 	}
-stage('Gradle BUILD') { 	
+stage('Gradle BUILD') { 
+	when { 	
+	    expression { 			    	
+		    return params.BUILD_TOOL_SELECTION == 'Gradle'
+		    echo "In clean install, build tool selected is : ${buildTool}" 	           	    
+	           }	
+		}
 	tools {
        	 gradle 'gradle-4.10'
    	 }
@@ -114,6 +120,7 @@ stage('Gradle JUNIT TEST'){
 		echo 'Gradle Test Completed'
 		}
        }
+	
 }
 	
 }
