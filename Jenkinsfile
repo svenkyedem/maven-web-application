@@ -81,6 +81,7 @@ stage("sonar")
    echo "End test"
    }
   }
+ }
  stage("Quality Gate"){
 	  when {
 	    expression { 		  
