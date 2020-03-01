@@ -61,66 +61,28 @@ stage('Maven BUILD') {
          sh "${MavenHome}/bin/mvn clean package"
          }
 	}
-stage('Gradle BUILD') { 
-	when { 	
-	    expression { 			    	
-		    return params.BUILD_TOOL_SELECTION == 'Gradle'
-		    echo "In clean install, build tool selected is : ${buildTool}" 	           	    
-	           }	
+stage("sonar")
+  {
+   when {
+	    expression { 		 
+		    echo 'In when for Sonar'
+	        //    environment_name : "Dev"
+		    return (params.Sonar_Analysis == true)		 
+	           }
 		}
-	tools {
-       	 gradle 'gradle-4.10'
-   	 }
-	steps { 		
-			echo "In Build"
-			//echo "Project_Key = ${buildProps.project_key} @#@#@#@#@# "
-			echo "Starting Build"
-			//sh 'mvn clean install'			
-			//sh 'cd /opt/JenkinsHome/jobs/Initiations_Dev_Job/workspace/'
-		 	sh 'gradle clean build'
-			//echo 'Clean Install Complete'        
-			//echo "${env.PROJECT_VERSION} --- PROJECT VERSION"
-			//echo "$registry"
-			//echo '###############################'		
-     			echo '@@@ Starting Gradle Build @@@'
-    		
-      echo 'Completed Gradle Build'			
-			}
+   steps{
+    script{
+	scannerHome = tool 'sonar_scanner'
 	}
-//Unit test Stage
-stage('Maven JUNIT TEST'){
-	when { 	   
-	    expression { 		   
-		     //return params.toolSelection != 'Python';	
-		    return params.BUILD_TOOL_SELECTION == 'Maven'
-		    echo "In unit test, build tool selected is : ${buildTool}" 	           	    
-	           }	          
-		}
-	tools {
-    	  	 jdk "${jdkVersion}"   	
-  	   }
-	steps {
-		sh 'mvn test'
-		echo 'Maven Test Completed'
-		}
-       }
-stage('Gradle JUNIT TEST'){
-	when { 	   
-	    expression { 		   
-		     //return params.toolSelection != 'Python';	
-		    return params.BUILD_TOOL_SELECTION == 'Gradle'
-		    echo "In unit test, build tool selected is : ${buildTool}" 	           	    
-	           }	          
-		}
-	tools {
-    	  	 gradle 'gradle-4.10' 	
-  	   }
-	steps {
-		sh 'gradle test'
-		echo 'Gradle Test Completed'
-		}
-       }
-	
-}
+   // bat "mvn sonar:sonar"
+   echo "${scannerHome}"
+   withSonarQubeEnv('Sonar'){
+   sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=maven-web-application -Dsonar.projectName=maven-web-application -Dsonar.projectVersion=1.1 -Dsonar.java.binaries=.  -Dsonar.sources=src/main"					
+   echo "End test"
+   }
+  }
+  } 
+
+
 	
 }
