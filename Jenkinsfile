@@ -82,7 +82,7 @@ stage("sonar")
    }
   }
  }
- stage("Quality Gate"){
+stage("Quality Gate"){
 	  when {
 	    expression { 		  
 		    echo 'In when for QualityGate'	         
