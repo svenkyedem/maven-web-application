@@ -81,6 +81,46 @@ stage("sonar")
    echo "End test"
    }
   }
+ stage("Quality Gate"){
+	  when {
+	    expression { 		  
+		    echo 'In when for QualityGate'	         
+		    return (params.Sonar_Analysis == true || params.GIT_BRANCHES == 'Development');		   
+	           }
+		}
+	    steps{
+		    timeout(time: 10, unit: 'MINUTES') {
+		  //Just in case something goes wrong, pipeline will be killed after a timeout
+	    script{
+		    if (params.Environment_Name == 'DEV') { 
+		    sh 'sleep 60'
+		    def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv	
+		    
+		    echo "${qg.status}"
+		    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+		    echo 'Quality Gate Failed'
+                    sh 'exit 0'
+		    currentBuild.result = 'SUCCESS'
+               	    } 
+		    if (qg.status != 'OK') {
+			 echo "${qg.status}"   
+	   		 echo "Quality Gates failed"
+     			   error "Pipeline aborted due to quality gate failure: ${qg.status}"
+    			}
+                 } else {
+                     def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv	
+		    echo "${qg}.status"
+		    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+		    echo 'Quality Gate Failed'
+                    sh 'exit 0'
+		    currentBuild.result = 'SUCCESS'
+               	    }  
+		     //echo "Quality completed without if loop"
+  	    	   }
+	         }   
+    	      }
+   	}
+   }	  
   } 
 
 
