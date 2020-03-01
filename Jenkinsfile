@@ -72,7 +72,7 @@ stage("sonar")
 		}
    steps{
     script{
-	scannerHome = tool 'sonar_scanner'
+	scannerHome = tool 'Sonar'
 	}
    // bat "mvn sonar:sonar"
    echo "${scannerHome}"
